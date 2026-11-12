@@ -1,0 +1,7 @@
+# zizmor audits the workflows (see security.yaml). Caching dependencies is a real speed gain in CI and the
+# security check, which publish nothing; the release workflow (library profile) keeps the cache off.
+rules:
+  cache-poisoning:
+    ignore:
+      - ci.yaml
+      - security.yaml

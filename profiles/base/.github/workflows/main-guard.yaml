@@ -1,0 +1,34 @@
+name: Main branch guard
+
+# GitHub does not offer branch protection for this private repository on the
+# current plan, so a direct push to main cannot be blocked. This workflow
+# detects one instead: it fails, and marks the commit red, when the commit
+# that reached main does not belong to a merged pull request.
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  require-pull-request:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check that the commit came from a merged pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+          ACTOR: ${{ github.actor }}
+        run: |
+          merged=$(gh api "repos/${REPOSITORY}/commits/${SHA}/pulls" \
+            --jq '[.[] | select(.merged_at != null)] | length')
+          if [ "${merged}" -eq 0 ]; then
+            echo "::error::Commit ${SHA} was pushed to main by ${ACTOR} without a pull request. Changes to main must go through a pull request; see 'Contributing changes and experiments' in README.md."
+            exit 1
+          fi
+          echo "Commit ${SHA} belongs to a merged pull request."

@@ -1,0 +1,81 @@
+name: CI
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - "*"
+
+permissions:
+  contents: read
+
+jobs:
+  hooks-and-tests:
+    name: Hooks and generator tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4
+        with:
+          persist-credentials: false
+      - name: Install uv
+        uses: astral-sh/setup-uv@cec208311dfd045dd5311c1add060b2062131d57  # v8.0.0
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+      - name: Run the hooks
+        run: uvx prek run --all-files
+        env:
+          SKIP: no-commit-to-branch
+      - name: Sync
+        run: uv sync --locked
+      - name: Types
+        run: uv run ty check
+      - name: Generator tests
+        run: uv run pytest
+
+  profile:
+    name: Generated ${{ matrix.profile }} project
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [library, experiment]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4
+        with:
+          persist-credentials: false
+      - name: Install uv
+        uses: astral-sh/setup-uv@cec208311dfd045dd5311c1add060b2062131d57  # v8.0.0
+      - name: Generate the project
+        env:
+          PROFILE: ${{ matrix.profile }}
+        run: uv run --no-project python new.py demo-project --profile "$PROFILE" --dest "$RUNNER_TEMP"
+      - name: Install, lint, type check and test it as a user would
+        working-directory: ${{ runner.temp }}/demo-project
+        run: |
+          uv sync
+          uv run ruff check . --no-fix
+          uv run ruff format --check .
+          uv run ty check
+          uv run deptry .
+          uv run pytest
+      - name: Check the import layers
+        if: matrix.profile == 'experiment'
+        working-directory: ${{ runner.temp }}/demo-project
+        run: uv run lint-imports
+      - name: Run its hooks
+        working-directory: ${{ runner.temp }}/demo-project
+        run: |
+          git add .
+          uvx prek run --all-files
+          uvx prek run --all-files --hook-stage pre-push
+        env:
+          SKIP: no-commit-to-branch,ty,deptry

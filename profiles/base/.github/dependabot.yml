@@ -1,0 +1,16 @@
+# Keeps the SHA-pinned actions and the uv lock file current. Commit messages start with "build"
+# so that the commitizen check accepts them.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: build
+  - package-ecosystem: uv
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: build

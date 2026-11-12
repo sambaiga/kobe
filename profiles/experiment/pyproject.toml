@@ -1,0 +1,142 @@
+[project]
+name = "sample-project"
+version = "0.1.0"
+description = "A sample project."
+authors = [{ name = "Sample Author", email = "author@example.com" }]
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.0",
+    "pandas>=2.2",
+]
+
+[project.urls]
+Homepage = "https://github.com/sample-owner/sample-project"
+Repository = "https://github.com/sample-owner/sample-project"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["sample_package"]
+
+# A dependency that lives in a private repository is pinned to a commit, for example:
+#   "twiga @ git+https://github.com/sample-owner/twiga-forecast@<commit>"
+# with `[tool.hatch.metadata] allow-direct-references = true`, and the workflows then need a token
+# (generate the project with `--private-token SECRET_NAME`).
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "hypothesis>=6.100",
+    "commitizen>=4.0",
+    "ruff>=0.14",
+    "ty>=0.0.100",
+    "prek>=0.2",
+    "interrogate>=1.7",
+    "bandit>=1.8",
+    "deptry>=0.20",
+    "diff-cover>=9.0",
+    "import-linter>=2.0",
+    "ipykernel>=6.29",
+    "nbclient>=0.10",
+    "nbformat>=5.10",
+]
+
+[tool.uv]
+required-version = ">=0.9"
+default-groups = ["dev"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --strict-config --cov=sample_package --cov-report=term-missing --cov-report=xml --cov-fail-under=70"
+filterwarnings = ["error"]
+xfail_strict = true
+markers = [
+    "unit: fast tests of one function or class",
+    "integration: tests that cross modules or touch files",
+    "slow: tests that take more than a few seconds (deselect with -m 'not slow')",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["sample_package"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "B", "C4", "C901", "D", "E", "F", "I", "N", "NPY", "PD", "PERF", "PGH", "PLR0912", "PLR0915", "PTH", "Q", "RUF",
+    "S", "SIM", "T201", "TID", "TRY", "UP", "W", "YTT",
+]
+ignore = ["D105", "D107", "TRY003", "N803"]
+
+# Size and complexity limits: split a function that needs more.
+[tool.ruff.lint.mccabe]
+max-complexity = 15
+
+[tool.ruff.lint.pylint]
+max-branches = 15
+max-statements = 60
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "D", "T201", "C901", "PLR0912", "PLR0915"]
+"scripts/**" = ["T201", "S603", "S607"]
+# The command-line module prints its results by design; every other module logs.
+"sample_package/steps.py" = ["T201"]
+"{notebooks,paper}/**" = ["T201", "D"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["sample_package"]
+combine-as-imports = true
+force-sort-within-sections = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ty.environment]
+python-version = "3.12"
+
+[tool.ty.src]
+include = ["sample_package", "tests", "scripts"]
+
+[tool.importlinter]
+root_package = "sample_package"
+
+[[tool.importlinter.contracts]]
+name = "Layers: command line over analysis over scoring over conditions"
+type = "layers"
+layers = [
+    "sample_package.steps",
+    "sample_package.analysis",
+    "sample_package.scoring",
+    "sample_package.conditions",
+]
+
+[tool.deptry]
+known_first_party = ["sample_package"]
+
+[tool.deptry.per_rule_ignores]
+DEP004 = ["pytest", "hypothesis", "interrogate"]
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+skips = ["B101"]
+
+[tool.codespell]
+skip = "*.ipynb,*.csv,*.json,uv.lock"
+ignore-words = "codespell.ignore"
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version_provider = "pep621"
+tag_format = "v$version"
+version_scheme = "semver"

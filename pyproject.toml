@@ -1,0 +1,69 @@
+[project]
+name = "msingi"
+version = "0.1.0"
+description = "Seeds for new Python projects: a library profile and an experiment profile, with the user's coding skills."
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.12"
+dependencies = []
+
+# This repository is a generator and a set of profiles, not an installable package.
+[tool.uv]
+package = false
+required-version = ">=0.9"
+default-groups = ["dev"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "commitizen>=4.0",
+    "ruff>=0.14",
+    "ty>=0.0.100",
+    "prek>=0.2",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers --strict-config"
+filterwarnings = ["error"]
+xfail_strict = true
+pythonpath = ["."]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+# The profiles are projects with their own configuration, checked as generated projects in CI.
+extend-exclude = ["profiles/library", "profiles/experiment"]
+
+[tool.ruff.lint]
+select = [
+    "B", "C4", "C901", "D", "E", "F", "I", "N", "NPY", "PD", "PERF", "PGH", "PLR0912", "PLR0915", "PTH", "Q", "RUF",
+    "S", "SIM", "T201", "TID", "TRY", "UP", "W", "YTT",
+]
+ignore = ["D105", "D107", "TRY003", "N803"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106", "D", "T201"]
+"new.py" = ["T201"]
+"profiles/base/scripts/**" = ["T201"]
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+force-sort-within-sections = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ty.environment]
+python-version = "3.12"
+
+[tool.ty.src]
+include = ["new.py", "tests"]
+
+[tool.codespell]
+skip = "*.ipynb,*.csv,*.json,uv.lock"
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version_provider = "pep621"
+tag_format = "v$version"
