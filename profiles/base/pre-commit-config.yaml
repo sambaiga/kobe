@@ -37,7 +37,7 @@ repos:
         language: python
         additional_dependencies: [interrogate==1.7.0]
         types: [python]
-        files: ^((src/)?sample_package|scripts)/
+        files: ^(sample_package|scripts)/
         stages: [pre-push]
       - id: deptry
         name: deptry (unused and missing dependencies)
