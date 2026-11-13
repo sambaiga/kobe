@@ -1,12 +1,11 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/logo-dark.svg">
-    <img src="assets/logo.svg" alt="msingi: profiles, generator, skills" width="480">
+    <img src="assets/logo.svg" alt="kobe: profiles, generator, skills" width="480">
   </picture>
 </p>
 
-*Msingi* is Swahili for foundation. This repository is where a new Python project starts, and what every project
-stands on: two ready profiles, the coding skills that go with them, and a small generator.
+*Kobe* is Swahili for tortoise, the animal that carries its foundation on its back. This repository is where a new Python project starts, and what every project stands on: two ready profiles, the coding skills that go with them, and a small generator.
 
 ```bash
 uv run python new.py my-study --profile experiment            # a research or reproducibility repo
