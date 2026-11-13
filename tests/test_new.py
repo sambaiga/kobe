@@ -26,9 +26,9 @@ def test_a_profile_adds_its_files_to_the_shared_ones():
     library, experiment = new.profile_files("library"), new.profile_files("experiment")
     shared = Path("scripts/check_docstrings.py")
     assert shared in library and shared in experiment
-    assert Path("src/sample_package/smoothing.py") in library
+    assert Path("sample_package/smoothing.py") in library
     assert Path("sample_package/scoring.py") in experiment
-    assert Path("src/sample_package/smoothing.py") not in experiment
+    assert Path("sample_package/smoothing.py") not in experiment
 
 
 def test_an_unknown_profile_is_rejected():
@@ -69,7 +69,7 @@ def test_a_generated_project_has_no_sample_names_left(profile, tmp_path):
 def test_the_package_directory_follows_the_layout_of_the_profile(tmp_path):
     library = new.generate("demo-lib", "library", tmp_path, init_git=False)
     experiment = new.generate("demo-exp", "experiment", tmp_path, init_git=False)
-    assert (library / "src" / "demo_lib" / "__init__.py").is_file()
+    assert (library / "demo_lib" / "__init__.py").is_file()
     assert (experiment / "demo_exp" / "scoring.py").is_file()
     assert 'name = "demo-lib"' in (library / "pyproject.toml").read_text(encoding="utf-8")
 

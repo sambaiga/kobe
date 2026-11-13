@@ -13,7 +13,7 @@ git switch -c feat/start # main is guarded: commit on a branch and open a pull r
 
 ## Layout
 
-- `src/sample_package/`: the library; one module per focus (`smoothing.py` is the example), the public API in `__init__.py`.
+- `sample_package/`: the library, at the repository root and not under `src/`, as in twiga, popo and milia; one module per focus (`smoothing.py` is the example), the public API in `__init__.py`, and `py.typed` so that users' type checkers read the annotations.
 - `tests/unit/`: mirrors the source tree.
 - `scripts/`: small command-line helpers (`check_docstrings.py` is a hook).
 - `.github/workflows/`: CI, security and the PyPI release (tags `v*`, trusted publishing).

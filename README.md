@@ -16,7 +16,7 @@ Both start from the same base and differ only where a library and an experiment 
 
 | | `library` | `experiment` |
 |---|---|---|
-| Layout | `src/<package>/`, one module per focus, public API in `__init__.py`, `py.typed` | `<package>/` in layers: `conditions` (declarations), `scoring` (pure), `analysis` (I/O), `steps` (command line), with an import contract |
+| Layout | `<package>/` at the repository root, one module per focus, public API in `__init__.py`, `py.typed` | `<package>/` in layers: `conditions` (declarations), `scoring` (pure), `analysis` (I/O), `steps` (command line), with an import contract |
 | Also has | optional extras, Python 3.12 and 3.13 matrix, PyPI publishing by trusted publishing on a `v*` tag, changelog by commitizen | `data/`, `notebooks/`, `paper/`, regenerated `results/` (not committed), `make run` and `make status`, optional private-dependency token |
 | Test floor | coverage at least 80 % | coverage at least 70 % |
 
