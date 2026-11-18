@@ -27,7 +27,7 @@ Load [[coding-standards]] first. A reader should be able to say what a module is
 
 ## Where new code goes
 
-9. Search first (`rg`), in the repo and in the library it should reuse (safina for umeme): extend the module that already has the focus. Create a module only when no existing focus fits, check the name is free, and add it to the package's `__init__` exports and docs.
+9. Search first (`rg`), in the repo and in the library it should reuse (milia for mbuga): extend the module that already has the focus. Create a module only when no existing focus fits, check the name is free, and add it to the package's `__init__` exports and docs.
 10. **Layout.** A library keeps its package at the repository root (`<package>/`, with `py.typed` inside), not under `src/`; `tests/` mirrors it, and `scripts/` holds the development helpers. Run everything from the root with `uv run` so that the working tree is the package under test, and keep `packages = ["<package>"]` in the hatch wheel target.
 10. A new feature touches, in order: the pure function (with its test), the config field and its validation, the wiring in every consumer, the experiment condition or entry point, the documentation. Do not start at the entry point.
 11. **Tests mirror the source tree** (`tests/unit/<package path>/test_<module>.py`); a new module brings its test module.
