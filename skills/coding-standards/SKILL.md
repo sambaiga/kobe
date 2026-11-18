@@ -1,6 +1,6 @@
 ---
 name: coding-standards
-description: The overall coding standard for every repository of the user (twiga, fpqr-experiment, multitarget-forecast, umeme, safina, popo, crc-experiment). Use before writing, changing, reviewing or committing any Python code, test, config or experiment script, and before opening or merging a pull request. It consolidates the saved memories on code quality, naming, notebooks, validity, git and PR workflow, and gives the per-repository commands and the known gaps.
+description: The overall coding standard for every repository of the user (twiga, fpqr-experiment, multitarget-forecast, mbuga, milia, popo, crc-experiment). Use before writing, changing, reviewing or committing any Python code, test, config or experiment script, and before opening or merging a pull request. It consolidates the saved memories on code quality, naming, notebooks, validity, git and PR workflow, and gives the per-repository commands and the known gaps.
 ---
 
 # Coding standards: one standard for every repository
@@ -12,13 +12,13 @@ Apply this to every piece of code that lands in a repository. A one-off script i
 1. Re-read `MEMORY.md` and the memories linked below that bear on the task: [[feedback-code-quality]], [[feedback-naming-underscores]], [[feedback-no-code-in-notebooks]], [[feedback-domain-validity]], [[feedback-review-code-after-analysis]], [[feedback-verify-claims]], [[feedback-local-compute]], [[feedback-git-workflow]], [[feedback-pr-workflow]], [[feedback-commits]], [[feedback-uv-test-runner]].
 2. Say which repository you are in and use its commands (table at the end).
 3. Load the specialist skill for the work: [[project-organisation]] (where code goes, module focus), [[python-performance]] (loops, memory, vectorising), [[numerical-correctness]] (metrics, formulas, floats), [[python-testing]] (what a test must prove), [[pytorch-lightning-engineering]] (training code).
-4. Search before you write: `rg` for an existing function in the repo, in twiga, and in safina for umeme. Check a module name is free (`ls`, `git ls-files`) before creating it; a write that says "updated" replaced a file, so stop and restore it.
+4. Search before you write: `rg` for an existing function in the repo, in twiga, and in milia for mbuga. Check a module name is free (`ls`, `git ls-files`) before creating it; a write that says "updated" replaced a file, so stop and restore it.
 
 ## The rules
 
 **1. Logic first.** Correct, with no leakage and no silent shortcut. Time series: reindex to a regular grid before shifting, lag at least the horizon, embargo one horizon between training and test, fit scalers, selection and hyperparameters on the training window only, same settings in every fold, test on the forecast day not the hour, correct for multiple comparisons, read the effect size beside the p-value.
 
-**2. Structure.** (Detail in [[project-organisation]].) Single responsibility, one focus per module stated in its docstring, imports pointing one way, a clear public API, pure functions kept apart from I/O, solvers and plotting so each can be tested. Notebook cells only orchestrate: they load data, call tested functions and draw; a builder cell defines no function or class. Reuse before you create: use the function that exists (safina for umeme) or extend its module, never a second copy. Domain code is a valid problem on valid data: stated standards, converged power flow with failures reported, provenance of every input.
+**2. Structure.** (Detail in [[project-organisation]].) Single responsibility, one focus per module stated in its docstring, imports pointing one way, a clear public API, pure functions kept apart from I/O, solvers and plotting so each can be tested. Notebook cells only orchestrate: they load data, call tested functions and draw; a builder cell defines no function or class. Reuse before you create: use the function that exists (milia for mbuga) or extend its module, never a second copy. Domain code is a valid problem on valid data: stated standards, converged power flow with failures reported, provenance of every input.
 
 **3. Names.** Plain and descriptive: `scores`, `frame`, `generator`, `training`, `test`. Banned as variable or parameter names: `s t f g r df rng tr te`. Single letters are allowed only as the standard symbol of a formula (`x`, `y`, `n`, `k`, `z`) and only when the docstring names them. Avoid needless underscores in file, function, variable and notebook names; use `_` where words really need separating or for true private API. Do not rename public names without asking.
 
@@ -43,17 +43,17 @@ Many findings predate the rules, so gate in two steps: **ratchet first** (new co
 | Rule | Tool | Stage | Notes |
 |---|---|---|---|
 | Legacy numpy, `.values`, `inplace`, loops | ruff `NPY`, `PD`, `PERF`, `C4` | commit | existing counts in `reference-coding-audit` |
-| Size and complexity | ruff `C901`, `PLR0912`, `PLR0913`, `PLR0915` with `max-complexity`, `max-args`, `max-statements` set in `pyproject.toml` | commit | package findings today: twiga 50 / 32 / 278 / 19, umeme 2 / 0 / 53 / 8, multitarget 5 / 3 / 15 / 0, fpqr 4 / 3 / 17 / 1; start at the current worst and lower |
-| `print` in library code | ruff `T201` (per-file ignores for CLI modules and scripts) | commit | today: fpqr 85, multitarget 75, umeme 5, twiga 0; use `logging` outside entry points |
-| Docstring sections | ruff `D` with `convention = "google"`, plus multitarget's `scripts/check_docstrings.py` (interrogate with Google sections, 90 % per file) | commit or push | copy the hook into twiga, fpqr and umeme |
-| Banned names (`df rng tr te s t f g r`) | a `pygrep` local hook on parameter and assignment patterns, or umeme's `stylecheck` BANNED list | commit | few false positives with `\b` and a def or assignment context |
-| Types | `ty check` with fewer ignored rules, one removed per PR | push and CI | umeme needs the hook |
+| Size and complexity | ruff `C901`, `PLR0912`, `PLR0913`, `PLR0915` with `max-complexity`, `max-args`, `max-statements` set in `pyproject.toml` | commit | package findings today: twiga 50 / 32 / 278 / 19, mbuga 2 / 0 / 53 / 8, multitarget 5 / 3 / 15 / 0, fpqr 4 / 3 / 17 / 1; start at the current worst and lower |
+| `print` in library code | ruff `T201` (per-file ignores for CLI modules and scripts) | commit | today: fpqr 85, multitarget 75, mbuga 5, twiga 0; use `logging` outside entry points |
+| Docstring sections | ruff `D` with `convention = "google"`, plus multitarget's `scripts/check_docstrings.py` (interrogate with Google sections, 90 % per file) | commit or push | copy the hook into twiga, fpqr and mbuga |
+| Banned names (`df rng tr te s t f g r`) | a `pygrep` local hook on parameter and assignment patterns, or mbuga's `stylecheck` BANNED list | commit | few false positives with `\b` and a def or assignment context |
+| Types | `ty check` with fewer ignored rules, one removed per PR | push and CI | mbuga needs the hook |
 | Module focus and layering | `import-linter` contracts (layers, no cycles), and a hook that fails a new module over 1,000 lines | push | see [[project-organisation]] |
 | Dead code, unused dependencies | `vulture`, `deptry` | push | allow-list intentional API |
 | Tests for new code | `pytest --cov-fail-under` plus `diff-cover --fail-under=90` on changed lines | push and CI | coverage on the diff, not the whole repo |
 | Performance regressions | `pytest-benchmark`, `pytest-memray` `limit_memory` on marked tests | CI, marked | only for optimised code |
 | Commit message | commitizen (exists); a `commit-msg` hook rejecting a `Co-Authored-By` trailer | commit-msg | enforces the no-AI-trailer rule |
-| No code in notebooks | a hook that fails if a builder under `scripts/build/` contains `def` or `class` | commit | umeme only |
+| No code in notebooks | a hook that fails if a builder under `scripts/build/` contains `def` or `class` | commit | mbuga only |
 
 Check a proposed hook on the real repository before adding it: count its current violations, decide the ratchet, and add it in its own PR.
 
@@ -64,15 +64,15 @@ Check a proposed hook on the real repository before adding it: count its current
 | twiga-forecast | `uv run pytest` (macOS: `bash scripts/fix_omp.sh` after a fresh sync) | `uv run ruff check . --no-fix`, `uv run ruff format --check .` | `uv run ty check twiga` | interrogate, commitizen, bandit, detect-secrets, codespell, pip-audit |
 | fpqr-experiment | `env -u VIRTUAL_ENV uv run --no-sync pytest -q` | same | `uv run ty check fpqr_experiment tests` | commitizen, bandit, detect-secrets, codespell |
 | multitarget-forecast | `uv run pytest` | same | `uv run ty check multitarget_forecast` | local `docstrings` hook (Args and Returns), commitizen, bandit |
-| umeme | `uv run pytest -q` (doctests included) or `make check` | `ruff check .`, `ruff format --check .` | `uv run ty check umeme tests` | `stylecheck` (banned words), nbstripout, codespell |
+| mbuga | `uv run pytest -q` (doctests included) or `make check` | `ruff check .`, `ruff format --check .` | `uv run ty check umeme tests` | `stylecheck` (banned words), nbstripout, codespell |
 
 The pinned `ty` of a repository and `uvx ty` name rules differently; use the pinned one. A new git worktree needs its own `uv sync --frozen --all-extras`.
 
 ## Known gaps (measured 2026-11-12; improve the code you touch, do not mass-rename)
 
-- **Docstring sections:** documented functions without `Args:` or `Returns:` are 65 and 62 in umeme, 71 and 72 in twiga, 18 and 15 in fpqr-experiment; multitarget-forecast has none because its hook enforces it.
-- **Banned names:** `df`, `rng`, `r` as parameters or variables are in twiga (38 parameters, 97 variables), umeme (47 variables), multitarget-forecast (17) and fpqr-experiment (17).
+- **Docstring sections:** documented functions without `Args:` or `Returns:` are 65 and 62 in mbuga, 71 and 72 in twiga, 18 and 15 in fpqr-experiment; multitarget-forecast has none because its hook enforces it.
+- **Banned names:** `df`, `rng`, `r` as parameters or variables are in twiga (38 parameters, 97 variables), mbuga (47 variables), multitarget-forecast (17) and fpqr-experiment (17).
 - **Legacy numpy and pandas:** twiga's 454 legacy `np.random` calls are all in its tests (none in the package); the package has 38 `.values` and 10 `inplace`, and examples 23 `.values`.
-- **Size:** twiga has 153 functions over 80 lines (longest 437), umeme 35, fpqr-experiment 4 (longest 205).
-- **Gates:** `ty` is configured to ignore about a dozen rules in twiga, multitarget-forecast and fpqr-experiment, and umeme has no `ty` hook; only twiga runs `interrogate`; no repository enforces a coverage floor; fpqr-experiment ignores every `D1xx` rule.
-- **umeme** is clean on its package, tests and scripts but not on `_notes/` scripts and the book code notebooks (ruff errors, 21 unformatted files, 205 `ty` diagnostics).
+- **Size:** twiga has 153 functions over 80 lines (longest 437), mbuga 35, fpqr-experiment 4 (longest 205).
+- **Gates:** `ty` is configured to ignore about a dozen rules in twiga, multitarget-forecast and fpqr-experiment, and mbuga has no `ty` hook; only twiga runs `interrogate`; no repository enforces a coverage floor; fpqr-experiment ignores every `D1xx` rule.
+- **mbuga** is clean on its package, tests and scripts but not on `_notes/` scripts and the book code notebooks (ruff errors, 21 unformatted files, 205 `ty` diagnostics).
