@@ -19,7 +19,7 @@ dev = [
     "commitizen>=4.0",
     "ruff>=0.14",
     "ty>=0.0.100",
-    "prek>=0.2",
+    "prek>=0.5.11",
 ]
 
 [tool.pytest.ini_options]
