@@ -16,7 +16,7 @@ default-groups = ["dev"]
 [dependency-groups]
 dev = [
     "pytest>=8.0",
-    "commitizen>=4.0",
+    "commitizen>=4.20.0",
     "ruff>=0.14",
     "ty>=0.0.100",
     "prek>=0.2",
