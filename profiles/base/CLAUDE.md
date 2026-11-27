@@ -30,3 +30,6 @@ Run Python and pytest as `uv run ...`. Never edit `uv.lock` by hand: change `pyp
 7. **Git:** feature branch, conventional commit titles, stage explicit paths (never `git add -A`), no AI
    co-author trailer, open a pull request and wait to be told to merge.
 8. One heavy job at a time on a laptop; heavy runs go to the server.
+9. **Sources:** every number or fact that is not the project's own measurement comes with its original source (title,
+   author, year, link) and the exact sentence it rests on; say whether it is a cause or a correlation and when it comes from
+   a paper's limitations; mark what cannot be sourced as unverified and never fill the gap.
