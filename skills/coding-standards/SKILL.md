@@ -76,3 +76,17 @@ The pinned `ty` of a repository and `uvx ty` name rules differently; use the pin
 - **Size:** twiga has 153 functions over 80 lines (longest 437), mbuga 35, fpqr-experiment 4 (longest 205).
 - **Gates:** `ty` is configured to ignore about a dozen rules in twiga, multitarget-forecast and fpqr-experiment, and mbuga has no `ty` hook; only twiga runs `interrogate`; no repository enforces a coverage floor; fpqr-experiment ignores every `D1xx` rule.
 - **mbuga** is clean on its package, tests and scripts but not on `_notes/` scripts and the book code notebooks (ruff errors, 21 unformatted files, 205 `ty` diagnostics).
+## Added after the review of Book 2 Chapters 1 to 3 (2026-11-21)
+
+- **Review step after every run (rule 1 and 8, restated).** Audit each finished run for leakage that the selection of series or thresholds can cause: a filter on the whole record (for example at least 20 weeks of demand over all 156) uses the test period. Select on the window before the first origin. Scalers and per-series scales are fitted on the training window.
+- **Prose and code agree.** A number in a chapter must occur in a stored output; the repository check is `scripts/provenance.py` with `tests/test_provenance.py`. Re-execute the cell, do not retype the number.
+- **A claim is a test.** A word of robustness is measured across folds before it is written. Recompute changed numbers independently.
+- **A fix has a regression test.** When a bug lives in a builder cell, a static test over the builder source asserts the fixed form and the absence of the old one (`tests/test_builders.py`); when it lives in a function, the test fails on the old behaviour.
+- **Shell safety.** Never write text containing backticks through an unquoted heredoc.
+
+## Traps found in the Bayes Part 3 work (2026-11-27)
+- `ruff format` run on a package reformats unrelated files (for example `bayes/feature/selection.py`): stage explicit paths and revert the rest.
+- A notebook committed with outputs fails `nbstripout`; the hooks then rewrite the file, so `git add` it again and retry the commit.
+- Pre-commit `mypy` wants annotations on empty lists (`cells: list[dict[str, Any]] = []`); ruff in the notebook hook rejects `a; b` on one line.
+- A plot layer built from an empty frame (all bars on one side) makes lets-plot fail with "no width and height": add the layer only when rows exist, and test both cases.
+- A survival likelihood must have one record per unit (event time or censoring time), never one per cycle row; check the remaining-life formula against numerical integration (Gamma(1+1/alpha) factor).

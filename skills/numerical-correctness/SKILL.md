@@ -48,3 +48,9 @@ Load [[coding-standards]] first. A wrong number that looks reasonable is worse t
 3. What happens on empty, single, NaN, tied and crossing inputs?
 4. Is the grid or truncation stated, and are scores compared only on the same grid?
 5. Is there a closed-form, an invariant and a fails-on-old test?
+## Added after the review of Book 2 Chapters 1 to 3 (2026-11-21)
+
+20. **Selection before the test.** Filters on a series (enough non-zero weeks, a minimum variance) and the normalisation of a panel (a mean over the last 104 weeks) are computed on the window before the first origin. A whole-record statistic puts the test period into the sample and the scale.
+21. **Fold-by-fold agreement.** A difference between two forecasters is reported with the number of origins in which it has the same sign and the standard deviation of the per-origin difference beside its mean. On four origins a mean of 7% with a spread of 0.15 against 0.06 is not a separation.
+22. **Quote the right statistic.** A ratio to a mean and a ratio to a median differ (a restock week gave a mean of 1.0 and a median of 0.9 of the in-stock level); pooled and per-unit averages differ. Name which one is quoted and check it against the cell that prints it.
+23. **Run membership against window.** A rule that marks runs of at least k zero weeks marks every week of the run (recall 0.64, precision 0.19 on VN2), not only the k-th; test the definition on a small example.
