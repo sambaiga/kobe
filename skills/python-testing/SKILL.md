@@ -45,3 +45,8 @@ Load [[coding-standards]] first. A test is worth writing when it can fail for a 
 4. Seeds fixed, no network or wall-clock, files only in `tmp_path`?
 5. Does a refactor carry an equivalence check on real saved data?
 6. Is the full suite green, and is changed-line coverage met?
+## Added after the review of Book 2 Chapters 1 to 3 (2026-11-21)
+
+19. **Static tests for builders.** A bug that lives in a string cell of a builder is guarded by a test that reads the builder source and asserts the fixed form and the absence of the old (the selection window of the retail cells).
+20. **Prose-to-output test.** A test runs the provenance check over the chapters, so that a number retyped by hand or left from an old run fails the suite (`tests/test_provenance.py`); the check names the derived numbers it allows and the reason.
+21. **Plot specifications are testable.** A lets-plot figure has `as_dict()`; assert the order of rows, the colour tone of each bar and the printed labels (`changebars`), not only that a plot is returned.
